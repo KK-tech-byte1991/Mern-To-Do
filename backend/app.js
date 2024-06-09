@@ -12,7 +12,12 @@ const uri ="mongodb://127.0.0.1:27017/test"
 var app = express();
 const toDoRoute = require('./routes/toDos')
 // view engine setup
-
+var cors = require('cors');
+var corsOptions = {
+    origin: '*',
+    optionsSuccessStatus: 200,
+  }
+app.use(cors(corsOptions));
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.set('views', path.join(__dirname, 'views'));
