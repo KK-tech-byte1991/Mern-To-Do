@@ -1,22 +1,25 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+let createError = require('http-errors');
+let express = require('express');
+let path = require('path');
+let cookieParser = require('cookie-parser');
+let logger = require('morgan');
 const mongoose = require("mongoose")
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+let indexRouter = require('./routes/index');
+let usersRouter = require('./routes/users');
 const bodyParser = require("body-parser");
 // const uri = "mongodb+srv://kishor:Durva@cluster0.mirndhq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-const uri ="mongodb://127.0.0.1:27017/test"
-var app = express();
+const uri = "mongodb://127.0.0.1:27017/test"
+const swagger = require('./swagger')
+let app = express();
 const toDoRoute = require('./routes/toDos')
 // view engine setup
-var cors = require('cors');
-var corsOptions = {
-    origin: '*',
-    optionsSuccessStatus: 200,
-  }
+
+
+let cors = require('cors');
+let corsOptions = {
+  origin: '*',
+  optionsSuccessStatus: 200,
+}
 app.use(cors(corsOptions));
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -29,13 +32,48 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+/**
+ * @swagger
+ * /:
+ *   get:
+ *     summary: Returns a simple message
+ *     responses:
+ *       200:
+ *         description: A simple message
+ */
+
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
+// app.use('/', indexRouter);
+
+/**
+ * @swagger
+ * /users:
+ *  get:
+ *    description: Use to request all users
+ *    responses:
+ *      '200':
+ *        description: A successful response
+ */
 app.use('/users', usersRouter);
+/**
+ * @swagger
+ * /users:
+ *  get:
+ *    description: Use to request all toddos
+ *    responses:
+ *      '200':
+ *        description: A successful response
+ */
 app.use("/todo", toDoRoute)
+swagger(app)
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
 });
+
 
 // error handler
 app.use(function (err, req, res, next) {
@@ -47,6 +85,9 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
+
 mongoose.connect(uri).then(() => console.log("Database connected"))
 
   .catch((err) => console.log(err));
