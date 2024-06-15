@@ -2,6 +2,15 @@ const ToDos = require("../models/toDos");
 const Kitten = require("../models/kitten")
 
 
+const editToDos = async (req, res, next) => {
+    let a=req.params.id
+    console.log("aaaaaaa",a,req)
+    try {
+        res.send(a)
+    } catch (error) {
+
+    }
+}
 
 const addToDos = async (req, res, next) => {
 
@@ -38,4 +47,4 @@ const getAllToDos = async (req, res, next) => {
     }
 }
 
-module.exports = { addToDos, getAllToDos }
+module.exports = { addToDos, getAllToDos, editToDos }

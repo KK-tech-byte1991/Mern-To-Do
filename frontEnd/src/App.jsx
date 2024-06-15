@@ -6,18 +6,27 @@ import AddToDo from "./pages/addToDo"
 function App() {
 
   const [toDoList, setToDoList] = useState([])
+  const [selectedToDo, setSelectedToDo] = useState(null)
 
-  useEffect(() => {
+  const getToDos = () => {
     axios.get("http://localhost:3000/todo/all").then((res) => {
       console.log(res, "ttttttt")
       setToDoList(res.data)
     })
+  }
+
+  useEffect(() => {
+    getToDos()
   }, [])
 
 
   return (
     <>
-      <AddToDo />
+      <AddToDo
+        refreshPage={getToDos}
+        selectedToDo={selectedToDo}
+      />
+      <button onClick={() => setSelectedToDo(null)}>Add TO Do</button>
       <ul>
         {toDoList.map((toDo) => <li key={toDo._id}>
 
@@ -25,6 +34,8 @@ function App() {
           <p> Start Time :{toDo.startTime}</p>
           <p>End time :{toDo.endTime}</p>
           <p>Priority:{toDo.toDoPriority}</p>
+
+          <button onClick={() => setSelectedToDo(toDo)}>Edit</button>
 
         </li>)}
 

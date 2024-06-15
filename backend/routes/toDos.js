@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const { addToDos, getAllToDos } = require("../controllers/toDo")
+const { addToDos, getAllToDos ,editToDos} = require("../controllers/toDo")
 /**
  * @swagger
  * /users:
@@ -34,5 +34,7 @@ router.post("/create", addToDos)
  *        description: A successful response
  */
 router.get("/all", getAllToDos)
+
+router.put("/edit/:id",editToDos)
 
 module.exports = router;
